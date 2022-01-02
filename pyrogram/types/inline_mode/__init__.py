@@ -27,5 +27,6 @@ from .inline_query_result_audio import InlineQueryResultAudio
 
 __all__ = [
     "InlineQuery", "InlineQueryResult", "InlineQueryResultArticle", "InlineQueryResultPhoto",
-    "InlineQueryResultAnimation", "InlineQueryResultAudio", "InlineQueryResultVideo", "ChosenInlineResult"
+    "InlineQueryResultAnimation", "InlineQueryResultCachedPhoto", "InlineQueryResultCachedDocument",
+    "ChosenInlineResult",
 ]
