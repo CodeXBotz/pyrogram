@@ -81,10 +81,10 @@ class InlineQueryResultCachedPhoto(InlineQueryResult):
             type=self.type,
             photo=photo,
             send_message=(
-                await self.input_message_content.write(self.reply_markup)
+                await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=self.reply_markup.write() if self.reply_markup else None,
+                    reply_markup=self.reply_markup.write(client) if self.reply_markup else None,
                     **await(Parser(None)).parse(self.caption, self.parse_mode)
                 )
             )
