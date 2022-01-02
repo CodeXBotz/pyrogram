@@ -18,6 +18,7 @@
 
 from typing import Union
 
+import pyrogram
 from pyrogram import raw
 from pyrogram import utils
 from pyrogram import types
@@ -72,7 +73,7 @@ class InlineQueryResultCachedPhoto(InlineQueryResult):
         self.reply_markup = reply_markup
         self.input_message_content = input_message_content
 
-    async def write(self):
+    async def write(self, client: "pyrogram.Client"):
         photo = utils.get_input_file_from_file_id(self.file_id, self.file_ref, 2)
 
         return raw.types.InputBotInlineResultPhoto(
