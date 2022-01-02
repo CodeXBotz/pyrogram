@@ -134,7 +134,7 @@ def get_input_file_from_file_id(
     expected_media_type: int = None
 ) -> Union["raw.types.InputPhoto", "raw.types.InputDocument"]:
     try:
-        decoded = decode_file_id(file_id_str)
+        decoded = FileId.decode(file_id)
     except Exception:
         raise ValueError(f"Failed to decode file_id: {file_id_str}")
     else:
