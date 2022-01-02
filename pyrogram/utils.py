@@ -77,49 +77,40 @@ def get_input_media_from_file_id(
 
     raise ValueError(f"Unknown file id: {file_id}")
 
+
 def get_input_file_from_file_id(
-    file_id_str: str,
-    file_ref: str = None,
-    expected_media_type: int = None
+    file_id: str,
+    expected_file_type: FileType = None
 ) -> Union["raw.types.InputPhoto", "raw.types.InputDocument"]:
     try:
-        decoded = FileId.decode(file_id_str)
+        decoded = FileId.decode(file_id)
     except Exception:
-        raise ValueError(f"Failed to decode file_id: {file_id_str}")
-    else:
-        media_type = decoded[0]
+        raise ValueError(f'Failed to decode "{file_id}". The value does not represent an existing local file, '
+                         f'HTTP URL, or valid file id.')
 
-        if expected_media_type is not None:
-            if media_type != expected_media_type:
-                media_type_str = Scaffold.MEDIA_TYPE_ID.get(media_type, None)
-                expected_media_type_str = Scaffold.MEDIA_TYPE_ID.get(expected_media_type, None)
+    file_type = decoded.file_type
 
-                raise ValueError(f'Expected: "{expected_media_type_str}", got "{media_type_str}" file_id instead')
+    if expected_file_type is not None and file_type != expected_file_type:
+        raise ValueError(f'Expected: "{expected_file_type}", got "{file_type}" file_id instead')
 
-        if media_type in (0, 1, 14):
-            raise ValueError(f"This file_id can only be used for download: {file_id_str}")
+    if file_type in (FileType.THUMBNAIL, FileType.CHAT_PHOTO):
+        raise ValueError(f"This file_id can only be used for download: {file_id}")
 
-        if media_type == 2:
-            unpacked = struct.unpack("<iiqqqiiii", decoded)
-            file_id, access_hash = unpacked[2:4]
+    if file_type in PHOTO_TYPES:
+        return raw.types.InputPhoto(
+            id=decoded.media_id,
+            access_hash=decoded.access_hash,
+            file_reference=decoded.file_reference
+        )
 
-            return raw.types.InputPhoto(
-                id=file_id,
-                access_hash=access_hash,
-                file_reference=decode_file_ref(file_ref)
-            )
+    if file_type in DOCUMENT_TYPES:
+        return raw.types.InputDocument(
+            id=decoded.media_id,
+            access_hash=decoded.access_hash,
+            file_reference=decoded.file_reference
+        )
 
-        if media_type in (3, 4, 5, 8, 9, 10, 13):
-            unpacked = struct.unpack("<iiqq", decoded)
-            file_id, access_hash = unpacked[2:4]
-
-            return raw.types.InputDocument(
-                id=file_id,
-                access_hash=access_hash,
-                file_reference=decode_file_ref(file_ref)
-            )
-
-        raise ValueError(f"Unknown media type: {file_id_str}")
+    raise ValueError(f"Unknown file id: {file_id}")
 
 async def parse_messages(client, messages: "raw.types.messages.Messages", replies: int = 1) -> List["types.Message"]:
     users = {i.id: i for i in messages.users}
