@@ -74,7 +74,7 @@ class InlineQueryResultCachedPhoto(InlineQueryResult):
         self.input_message_content = input_message_content
 
     async def write(self, client: "pyrogram.Client"):
-        photo = utils.get_input_file_from_file_id(self.file_id, self.file_ref, 2)
+        photo = utils.get_input_file_from_file_id(self.file_id, self.file_ref)
 
         return raw.types.InputBotInlineResultPhoto(
             id=self.id,
