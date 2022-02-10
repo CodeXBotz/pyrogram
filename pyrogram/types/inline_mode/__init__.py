@@ -1,5 +1,5 @@
 #  Pyrogram - Telegram MTProto API Client Library for Python
-#  Copyright (C) 2017-2021 Dan <https://github.com/delivrance>
+#  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #
 #  This file is part of Pyrogram.
 #
@@ -21,11 +21,12 @@ from .inline_query import InlineQuery
 from .inline_query_result import InlineQueryResult
 from .inline_query_result_animation import InlineQueryResultAnimation
 from .inline_query_result_article import InlineQueryResultArticle
+from .inline_query_result_audio import InlineQueryResultAudio
 from .inline_query_result_photo import InlineQueryResultPhoto
 from .inline_query_result_video import InlineQueryResultVideo
-from .inline_query_result_audio import InlineQueryResultAudio
 from .inline_query_result_cached_photo import InlineQueryResultCachedPhoto
 from .inline_query_result_cached_document import InlineQueryResultCachedDocument
+
 
 __all__ = [
     "InlineQuery", "InlineQueryResult", "InlineQueryResultArticle", "InlineQueryResultPhoto",
